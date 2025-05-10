@@ -20,7 +20,11 @@ const Layout = ({ children }: LayoutProps) => {
         }}
       >
         <div>
-          <h1 style={{ margin: 0, fontSize: '1.8rem' }}>EBS</h1>
+          <Link to="/" style={{ textDecoration: 'none', color: '#fff' }}>
+          <h1  style={{ margin: 0, fontSize: '1.8rem', cursor: 'pointer' }}>EBS</h1>
+          </Link>
+
+        
         </div>
         <nav>
           <Link

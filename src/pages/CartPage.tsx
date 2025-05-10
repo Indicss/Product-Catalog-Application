@@ -2,33 +2,36 @@ import { useCart } from '../context/CartContext';
 import './CartPage.css';
 
 const CartPage = () => {
-  const { cart, removeFromCart, clearCart, getTotalPrice } = useCart();
+  const { cart, removeFromCart, clearCart, getTotalPrice, addToCart } = useCart();
 
   if (cart.length === 0) {
-    return <p className="cart-empty"> Coșul este gol.</p>;
+    return <p className="cart-empty">Coșul este gol.</p>;
   }
 
   return (
     <div className="cart-container">
-      <h2 className="cart-title"> Coș de cumpărături</h2>
+      <h2 className="cart-title">Coș de cumpărături</h2>
       <ul className="cart-list">
-        {cart.map((product) => (
-          <li key={product.id} className="cart-item">
+        {cart.map((item, index) => (
+          <li key={index} className="cart-item">
             <img
-              src={product.image}
-              alt={product.title}
+              src={item.product.image}
+              alt={item.product.title}
               className="cart-image"
             />
             <div className="cart-details">
-              <strong>{product.title}</strong>
-              <span className="cart-price">${product.price.toFixed(2)}</span>
+              <strong>{item.product.title}</strong>
+              <span className="cart-price">
+                {item.quantity} x ${item.product.price.toFixed(2)} = ${(
+                  item.quantity * item.product.price
+                ).toFixed(2)}
+              </span>
+              <div className="cart-quantity-controls">
+                <button onClick={() => removeFromCart(item.product.id)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => addToCart(item.product)}>+</button>
+              </div>
             </div>
-            <button
-              className="cart-remove"
-              onClick={() => removeFromCart(product.id)}
-            >
-              Elimină
-            </button>
           </li>
         ))}
       </ul>
