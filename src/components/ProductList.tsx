@@ -5,7 +5,8 @@ import "./ProductList.css";
 import { Skeleton } from "@mui/material";
 
 const ProductList = () => {
- const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { addToCart } = useCart();
@@ -18,8 +19,8 @@ const ProductList = () => {
           setLoading(false);
           console.log(data);
         }, 1000);
+        setAllProducts(data);
         setProducts(data);
-        
         // setLoading(false);
       });
   }, []);
@@ -49,6 +50,50 @@ const ProductList = () => {
 
   return (
     <div className="product-container">
+      <div className="category-sort">
+        <select
+          onChange={(e) => {
+            const category = e.target.value;
+            if (category === "all") {
+              setProducts(allProducts);
+            } else {
+              const filteredProducts = allProducts.filter(
+                (product) => product.category === category
+              );
+              setProducts(filteredProducts);
+            }
+          }}
+        >
+          <option value="all">Toate categoriile</option>
+          <option value="electronics">Electronics</option>
+          <option value="jewelery">Bijuterii</option>
+          <option value="men's clothing">Imbracaminte barabt</option>
+          <option value="women's clothing">Imbracamint women</option>
+        </select>
+      </div>
+      <div className="product-sort-cantainer">
+        <div className="sort">
+          <label htmlFor="sort">Sortează după:</label>
+          <select
+            id="sort"
+            onChange={(e) => {
+              const sortValue = e.target.value;
+              if (sortValue === "asc") {
+                setProducts((prev) =>
+                  [...prev].sort((a, b) => a.price - b.price)
+                );
+              } else if (sortValue === "desc") {
+                setProducts((prev) =>
+                  [...prev].sort((a, b) => b.price - a.price)
+                );
+              }
+            }}
+          >
+            <option value="asc">Preț crescător</option>
+            <option value="desc">Preț descrescător</option>
+          </select>
+        </div>
+      </div>
       {alertMessage && <div className="alert">{alertMessage}</div>}
 
       <div className="product-grid">
