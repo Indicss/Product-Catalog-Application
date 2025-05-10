@@ -1,20 +1,26 @@
-import { useEffect, useState } from 'react';
-import { type Product } from '../types/Product';
-import { useCart } from '../context/CartContext';
-import './ProductList.css';
+import { useEffect, useState } from "react";
+import { type Product } from "../types/Product";
+import { useCart } from "../context/CartContext";
+import "./ProductList.css";
+import { Skeleton } from "@mui/material";
 
 const ProductList = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+ const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { addToCart } = useCart();
 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
+    fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((data: Product[]) => {
+        setTimeout(() => {
+          setLoading(false);
+          console.log(data);
+        }, 1000);
         setProducts(data);
-        setLoading(false);
+        
+        // setLoading(false);
       });
   }, []);
 
@@ -23,11 +29,26 @@ const ProductList = () => {
     setTimeout(() => setAlertMessage(null), 3000);
   };
 
-  if (loading) return <p className="loading">Loading products...</p>;
+  if (loading) {
+    return (
+      <div className="product-container">
+        <div className="product-grid">
+          {products.map((_, index) => (
+            <div className="product-card" key={index}>
+              <Skeleton variant="rectangular" width="100%" height={150} />
+              <Skeleton variant="text" width="80%" />
+              <Skeleton variant="text" width="60%" />
+              <Skeleton variant="text" width="40%" />
+              <Skeleton variant="rounded" width="100%" height={36} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="product-container">
-      {}
       {alertMessage && <div className="alert">{alertMessage}</div>}
 
       <div className="product-grid">
